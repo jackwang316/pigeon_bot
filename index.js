@@ -2,6 +2,7 @@ const Discord = require('discord.js')
 const {Intents} = require("discord.js");
 require("process");
 const fs = require("fs");
+const {splitter} = require("./handler");
 require('dotenv').config()
 
 const client = new Discord.Client({
@@ -20,7 +21,6 @@ for(const file of commandFiles){
     client.commands.set(command.name, command)
 }
 
-
 client.login(process.env.DISCORD_TOKEN).catch((err) => {
     console.error(err.message)
 })
@@ -31,12 +31,12 @@ client.on('ready', () => {
 
 client.on("messageCreate", (message) => {
     if(!message.content.startsWith("!")) {return}
-    const args = message.content.slice(1).trim().split(/ +/);
-    const command = args[0]
-
+    const args = splitter(message)
+    const command = args.shift().trim()
     if(client.commands.has(command)){
-        client.commands.get(command).execute(message);
+        return client.commands.get(command).execute(message, args)
     }
 })
+
 
 
