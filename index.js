@@ -1,6 +1,6 @@
 const Discord = require('discord.js')
 const {Intents} = require("discord.js");
-const Process = require("process");
+require("process");
 const fs = require("fs");
 require('dotenv').config()
 
@@ -14,7 +14,7 @@ const client = new Discord.Client({
 })
 
 client.commands = new Discord.Collection()
-const commandFiles = fs.readdirSync('./commands').filter(file => file.includes("pigeon-support" || "pigeon"))
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith(".js"))
 for(const file of commandFiles){
     const command = require(`./commands/${file}`)
     client.commands.set(command.name, command)
@@ -31,12 +31,11 @@ client.on('ready', () => {
 
 client.on("messageCreate", (message) => {
     if(!message.content.startsWith("!")) {return}
-    if (message.content === '!pigeon') {
-        message.reply({
-            content: 'Hello'
-        }).catch(() => {
-            console.error(`Replied to message "${message.member.user.tag}"`)
-        })
+    const args = message.content.slice(1).trim().split(/ +/);
+    const command = args[0]
+
+    if(client.commands.has(command)){
+        client.commands.get(command).execute(message);
     }
 })
 
