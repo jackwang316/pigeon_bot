@@ -5,11 +5,7 @@ module.exports = {
     description: "Send messages with pigeon",
     execute(message, args){
         let timer = args[args.length - 1].trim();
-        if(timer > 0) {
-            message.reply({
-                content: "Sending SMS in " + timer + " seconds"
-            })
-        }
+        if(timer > 0) {message.reply("Sending SMS in" + timer + " seconds")}
         return setTimeout(() => {sendSMS(message, args)}, timer * millisecondPerSecond)
     }
 }
