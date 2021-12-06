@@ -34,7 +34,7 @@ client.on("messageCreate", (message) => {
     if(!message.content.startsWith("!")) {return}
     const args = splitter(message)
     const command = args.shift().trim()
-    if(args.length < 4 && command === "pigeon") {
+    if(args.length < 3 && command === "pigeon") {
         return message.reply({content: "Invalid argument count, please use command '!pigeon-support' to see usage"})
     }
     if(client.commands.has(command)){
