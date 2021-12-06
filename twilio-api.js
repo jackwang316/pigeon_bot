@@ -1,3 +1,4 @@
+require('dotenv').config()
 const accountSid = process.env.TWILIO_ACC_SID
 const authToken = process.env.TWILIO_AUTH_TOKEN
 const twilioClient = require('twilio')(accountSid, authToken)
@@ -11,14 +12,10 @@ module.exports = {
             from: process.env.TWILIO_NUM,
             to: args[0]
         }).then(() => {
-            return message.reply({
-                content: "Message delivered"
-            })
+            message.reply("Message delivered")
         }).catch((e) => {
-            console.log(e)
-            return message.reply({
-                content: "Can't send message via SMS"
-            })
+            console.log(e.message)
+            message.reply("Can't send message via SMS")
         })
     },
 
@@ -30,7 +27,10 @@ module.exports = {
             text: args[1]
         }
         sendGridMail.send(mail)
-            .then(message.reply("Mail sent successfully"))
-            .catch(message.reply("Error sending mail"))
+            .then(() => {
+                message.reply("Mail sent successfully")
+            }).catch((e) => {
+                console.error(e.message)
+            })
     }
 }
